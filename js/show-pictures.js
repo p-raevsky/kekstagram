@@ -1,15 +1,13 @@
-import {openModalPicture} from './modal-picture.js';
-import {isEnterEvent} from './util.js';
-
 const pictures = document.querySelector('.pictures');
 
-const showPictureTemplate = (element) => {
-  const pictureTemplate = document.querySelector('#picture ').content.querySelector('.picture');
+const createPictureTemplate = (element) => {
+  const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const pictureElement = pictureTemplate.cloneNode(true);
   const pictureImage = pictureElement.querySelector('.picture__img');
   const pictureLikes = pictureElement.querySelector('.picture__likes');
   const pictureComments = pictureElement.querySelector('.picture__comments');
 
+  pictureImage.dataset.id = element.id;
   pictureImage.src = element.url;
   pictureLikes.textContent = element.likes;
   pictureComments.textContent = element.comments.length;
@@ -17,22 +15,19 @@ const showPictureTemplate = (element) => {
   return pictureElement;
 };
 
-const showPictures = (elements) => {
+const showPictures = (photos) => {
   const fragment = document.createDocumentFragment();
 
-  elements.forEach(element => {
-    const picture = showPictureTemplate(element);
-    picture.addEventListener('click', () => openModalPicture(element));
-    picture.addEventListener('keydown', (evt) => {
-      if (isEnterEvent(evt)) {
-        openModalPicture(element);
-      }
-    });
+  photos.forEach(photo => {
+    const picture = createPictureTemplate(photo);
+
     fragment.appendChild(picture);
   });
 
-
-  return pictures.appendChild(fragment);
+  pictures.appendChild(fragment);
 };
 
-export {showPictures};
+export {
+  pictures,
+  showPictures
+};
