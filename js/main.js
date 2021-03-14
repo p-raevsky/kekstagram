@@ -1,3 +1,4 @@
+import {showPictures} from './show-pictures.js';
 import {similarDiscriptions} from './data.js';
 
-console.log(similarDiscriptions);
+showPictures(similarDiscriptions);

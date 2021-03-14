@@ -20,10 +20,21 @@ const getRandomArrayElement = (elements) => {
   return elements[Math.floor(Math.random() * elements.length)];
 };
 
-const checkMaxStrLength = (checkedStr, maxLength) => {
-  const checkedStrLength = checkedStr.length;
+//Временно оставил до момента если понадобится:
+// const checkMaxStrLength = (checkedStr, maxLength) => {
+//   const checkedStrLength = checkedStr.length;
 
-  return checkedStrLength <= maxLength;
+//   return checkedStrLength <= maxLength;
+// };
+
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const isEnterEvent = (evt) => evt.key === 'Enter';
+
+export {
+  getRandomNumber,
+  getRandomArray,
+  getRandomArrayElement,
+  isEscEvent,
+  isEnterEvent
 };
-
-export {getRandomNumber, getRandomArray, getRandomArrayElement, checkMaxStrLength};
