@@ -2,6 +2,8 @@ import {
   isEscEvent,
   isEnterEvent
 } from './util.js';
+import {pictures} from './show-pictures.js';
+import {photos} from './data.js';
 
 const LI_CLASS_NAME = 'social__comment';
 const COMMENT_AVATAR_SIZE = 35;
@@ -17,34 +19,36 @@ const socialCommentCount = modalPicture.querySelector('.social__comment-count');
 const commentsLoader = modalPicture.querySelector('.comments-loader');
 const cancelButton = modalPicture.querySelector('.big-picture__cancel');
 
-const createComment = (obj) => {
+const createComments = (comments) => {
   socialComments.innerHTML = '';
 
-  if (obj.comments) {
-    obj.comments.forEach(element => {
+  if (comments) {
+    comments.forEach(comment => {
       const newLi = document.createElement('li');
+
       newLi.className = LI_CLASS_NAME;
       newLi.innerHTML = `<img
           class="social__picture"
-          src="${element.avatar}"
-          alt="${element.name}"
+          src="${comment.avatar}"
+          alt="${comment.name}"
           width="${COMMENT_AVATAR_SIZE}" height="${COMMENT_AVATAR_SIZE}">
-        <p class="social__text">${element.message}</p>`;
+        <p class="social__text">${comment.message}</p>`;
+
       socialComments.appendChild(newLi);
     });
   }
 };
 
-const openModalPicture = (obj) => {
+const openModalPicture = (photo) => {
   body.classList.add('modal-open');
   modalPicture.classList.remove('hidden');
 
-  bigPicture.src = obj.url;
-  likesCount.textContent = obj.likes;
-  commentsCount.textContent = obj.comments.length;
-  socialCaption.textContent = obj.description;
+  bigPicture.src = photo.url;
+  likesCount.textContent = photo.likes;
+  commentsCount.textContent = photo.comments.length;
+  socialCaption.textContent = photo.description;
 
-  createComment(obj);
+  createComments(photo.comments);
 
   socialCommentCount.setAttribute('hidden', '');
   commentsLoader.setAttribute('hidden', '');
@@ -79,4 +83,8 @@ const onEnterKeydown = (evt) => {
 
 const onCancelButtonClick = () => closeModalPicture();
 
-export {openModalPicture};
+pictures.addEventListener('click', (evt) => {
+  const arrayIndex = evt.target.dataset.id - 1;
+
+  openModalPicture(photos[arrayIndex]);
+});

@@ -1,4 +1,5 @@
 import {showPictures} from './show-pictures.js';
-import {similarDiscriptions} from './data.js';
+import {photos} from './data.js';
+import './modal-picture.js';
 
-showPictures(similarDiscriptions);
+showPictures(photos);

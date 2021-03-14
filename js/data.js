@@ -1,14 +1,13 @@
-import {getRandomNumber, getRandomArray, getRandomArrayElement} from './util.js';
+import {getRandomNumber, getRandomArrayElement} from './util.js';
 
 const ZERO = 0;
 const MIN_NUMBER = 1;
 const MAX_NUMBER = 25;
 const LIKES_MIN_NUMBER = 15;
 const LIKES_MAX_NUMBER = 99;
-const COMMENTS_MAX_NUMBER = 50;
 const AVATAR_MAX_NUMBER = 6;
 const MESSAGES_MAX_NUMBER = 5;
-const DISCRIPTIONS = [
+const DESCRIPTIONS = [
   'Крутая фотка, лучший кадр, который приходилось делать',
   'Очень люблю это фото',
   'Просто фото, сделанное пару дней назад',
@@ -36,39 +35,39 @@ const NAMES = [
   'XXX',
 ];
 
-const arrayForId = getRandomArray(MIN_NUMBER, MAX_NUMBER);
-const arrayForUrl = getRandomArray(MIN_NUMBER, MAX_NUMBER);
+let commentId = 0;
 
-const createComments = (index = 0) => {
-  const arrayForComments = getRandomArray(MIN_NUMBER, COMMENTS_MAX_NUMBER);
+const createComment = () => {
+  commentId++;
+  const id = commentId;
 
   return {
-    id: `1${getRandomNumber(MIN_NUMBER, COMMENTS_MAX_NUMBER)}${arrayForComments[index]}`,
+    id: id,
     avatar: `img/avatar-${getRandomNumber(MIN_NUMBER, AVATAR_MAX_NUMBER)}.svg`,
     message: getRandomArrayElement(MESSAGES),
     name: getRandomArrayElement(NAMES),
   };
 };
 
-const createPhotoData = (index = 0) => {
+const createPhoto = (index = 0) => {
   return {
-    id: arrayForId[index],
-    url: `photos/${arrayForUrl[index]}.jpg`,
-    description: getRandomArrayElement(DISCRIPTIONS),
+    id: index + 1,
+    url: `photos/${index + 1}.jpg`,
+    description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomNumber(LIKES_MIN_NUMBER, LIKES_MAX_NUMBER),
-    comments: createSimilarObjects(getRandomNumber(ZERO, MESSAGES_MAX_NUMBER), createComments),
+    comments: new Array(getRandomNumber(ZERO, MESSAGES_MAX_NUMBER)).fill().map(() => createComment()),
   };
 };
 
-const createSimilarObjects = (amount, createData) => {
-  const array = [];
+const createPhotos = (amount) => {
+  const photos = [];
 
   for ( let i = 0; i < amount; i++) {
-    array.push(createData(i));
+    photos.push(createPhoto(i));
   }
-  return array;
+  return photos;
 };
 
-const similarDiscriptions = createSimilarObjects(MAX_NUMBER, createPhotoData);
+const photos = createPhotos(MAX_NUMBER);
 
-export {similarDiscriptions};
+export {photos};
