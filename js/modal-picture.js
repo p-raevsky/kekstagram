@@ -83,8 +83,12 @@ const onEnterKeydown = (evt) => {
 
 const onCancelButtonClick = () => closeModalPicture();
 
-pictures.addEventListener('click', (evt) => {
-  const arrayIndex = evt.target.dataset.id - 1;
+const onPicturesClick = (evt) => {
+  if (evt.target.matches('.picture__img')) {
+    const arrayIndex = evt.target.dataset.id - 1;
 
-  openModalPicture(photos[arrayIndex]);
-});
+    openModalPicture(photos[arrayIndex]);
+  }
+};
+
+pictures.addEventListener('click', onPicturesClick);
