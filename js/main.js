@@ -1,7 +1,8 @@
 import './modal-picture.js';
-import './upload-image.js';
-import './edit-image.js';
+import './upload-new-picture.js';
+import './edit-new-picture.js';
 import './apply-effect.js';
+import './validation.js';
 
 import {showPictures} from './show-pictures.js';
 import {photos} from './data.js';

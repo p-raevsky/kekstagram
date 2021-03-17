@@ -1,8 +1,9 @@
 import {
   newImage,
   photoPreview,
-  resetPreview
-} from './upload-image.js';
+  resetPreview,
+  onNewImageChange
+} from './upload-new-picture.js';
 import {isEscEvent} from './util.js';
 import {
   createSlider,
@@ -11,7 +12,6 @@ import {
 
 const MIN_VALUE_CONTROL = 25;
 const MAX_VALUE_CONTROL = 100;
-const IMAGE_UPLOADING_DELAY = 1000;
 
 const body = document.querySelector('body');
 const imgContainer = document.querySelector('.img-upload__overlay');
@@ -19,27 +19,24 @@ const cancelButton = imgContainer.querySelector('#upload-cancel');
 const scale = imgContainer.querySelector('.scale');
 const controlValue = imgContainer.querySelector('.scale__control--value');
 
-const onNewImageClick = () => {
-  resetPreview();
+const openPicture = () => {
   createSlider();
 
-  setTimeout(() => {
-    imgContainer.classList.remove('hidden');
-    body.classList.add('modal-open');
-    controlValue.value = `${MAX_VALUE_CONTROL}%`;
+  imgContainer.classList.remove('hidden');
+  body.classList.add('modal-open');
+  controlValue.value = `${MAX_VALUE_CONTROL}%`;
 
-    document.addEventListener('keydown', onEscKeydown);
-  }, IMAGE_UPLOADING_DELAY);
+  document.addEventListener('keydown', onEscKeydown);
 };
 
 const onEscKeydown = (evt) => {
   if (isEscEvent(evt)) {
     evt.preventDefault();
-    closeModal();
+    closePicture();
   }
 };
 
-const closeModal = () => {
+const closePicture = () => {
   imgContainer.classList.add('hidden');
   body.classList.remove('modal-open');
 
@@ -47,10 +44,6 @@ const closeModal = () => {
   closeSlider();
 
   document.removeEventListener('keydown', onEscKeydown);
-};
-
-const onCancelButton = () => {
-  closeModal();
 };
 
 const changeScale = (evt) => {
@@ -68,9 +61,12 @@ const changeScale = (evt) => {
   }
 };
 
+newImage.addEventListener('change', onNewImageChange.bind(null, openPicture));
+
+cancelButton.addEventListener('click', () => {
+  closePicture();
+});
+
 scale.addEventListener('click', (evt) => {
   changeScale(evt);
 });
-
-newImage.addEventListener('click', onNewImageClick);
-cancelButton.addEventListener('click', onCancelButton);

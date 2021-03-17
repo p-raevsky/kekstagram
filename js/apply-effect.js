@@ -1,6 +1,6 @@
 /* global noUiSlider:readonly */
 
-import {photoPreview} from './upload-image.js';
+import {photoPreview} from './upload-new-picture.js';
 
 const sliderContainer = document.querySelector('.img-upload__effect-level');
 const sliderElement = sliderContainer.querySelector('.effect-level__slider');
@@ -108,22 +108,18 @@ const onEffectsListChange = (evt) => {
       step: effects[effect].step,
     });
 
-    applyEffect(effect);
+    sliderElement.noUiSlider.on('update', (values, handle) => {
+      valueElement.value = values[handle];
+
+      const effectValue = effects[effect].filter;
+      const unit = effects[effect].unit;
+
+      photoPreview.style.filter = `${effectValue}(${valueElement.value}${unit})`;
+    });
   } else {
     photoPreview.style.filter = '';
     sliderContainer.classList.add('hidden');
   }
-};
-
-const applyEffect = (filterName) => {
-  sliderElement.noUiSlider.on('update', (values, handle) => {
-    valueElement.value = values[handle];
-
-    const effect = effects[filterName].filter;
-    const unit = effects[filterName].unit;
-
-    photoPreview.style.filter = `${effect}(${valueElement.value}${unit})`;
-  });
 };
 
 const closeSlider = () => {

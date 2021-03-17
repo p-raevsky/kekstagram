@@ -7,16 +7,18 @@ const IMAGE_STYLE_OVERFLOW ='hidden';
 const newImage = document.querySelector('#upload-file');
 const photo = document.querySelector('.img-upload__preview');
 const photoPreview = document.querySelector('.img-upload__preview img');
+const effectsPreview = document.querySelectorAll('.effects__preview');
 
-const uploadPicture = () => {
+const onNewImageChange = (onModalOpen) => {
+  photoPreview.src = '';
+
   const file = newImage.files[0];
-
   const fileName = file.name.toLowerCase();
-
   const matches = FILE_TYPES.some((ending) => fileName.endsWith(ending));
+  const reader = new FileReader();
 
   if (matches) {
-    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
     reader.addEventListener('load', () => {
       photoPreview.src = reader.result;
@@ -24,25 +26,29 @@ const uploadPicture = () => {
       photoPreview.style.height = IMAGE_SIZE;
       photoPreview.style.objectFit = IMAGE_STYLE_OBJECT_FIT;
       photo.style.overflow = IMAGE_STYLE_OVERFLOW;
+
+      changeEffectsPreview(reader.result);
     });
 
-    reader.readAsDataURL(file);
+    onModalOpen();
   }
 };
 
-const onNewImageChange = () => {
-  uploadPicture();
+const changeEffectsPreview = (result = '') => {
+  for (let i = 0; i < effectsPreview.length; i++) {
+    effectsPreview[i].style.backgroundImage = `url(${result})`;
+  }
 };
 
 const resetPreview = () => {
   photoPreview.src = '';
   photoPreview.style.transform = `scale(${TRANSFORM_DEFAULT_VALUE})`;
+  changeEffectsPreview();
 };
-
-newImage.addEventListener('change', onNewImageChange);
 
 export {
   newImage,
   photoPreview,
-  resetPreview
+  resetPreview,
+  onNewImageChange
 };
