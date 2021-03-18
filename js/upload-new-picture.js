@@ -12,7 +12,7 @@ const effectsPreview = document.querySelectorAll('.effects__preview');
 const onNewImageChange = (onModalOpen) => {
   photoPreview.src = '';
 
-  const file = newImage.files[0];
+  let file = newImage.files[0];
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((ending) => fileName.endsWith(ending));
   const reader = new FileReader();
@@ -49,6 +49,7 @@ const resetPreview = () => {
 export {
   newImage,
   photoPreview,
+  effectsPreview,
   resetPreview,
   onNewImageChange
 };

@@ -9,6 +9,12 @@ import {
   createSlider,
   closeSlider
 } from './apply-effect.js';
+import {
+  hashtagElement,
+  commentElement,
+  onHashtagElementInput,
+  onCommentElementInput
+} from './validation.js';
 
 const MIN_VALUE_CONTROL = 25;
 const MAX_VALUE_CONTROL = 100;
@@ -29,16 +35,19 @@ const openPicture = () => {
   document.addEventListener('keydown', onEscKeydown);
 };
 
-const onEscKeydown = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closePicture();
-  }
-};
-
 const closePicture = () => {
+  const currentElement = document.activeElement.id;
+
+  if (currentElement === hashtagElement.id || currentElement === commentElement.id) {
+    return;
+  }
+
   imgContainer.classList.add('hidden');
   body.classList.remove('modal-open');
+  newImage.value = '';
+  hashtagElement.value = '';
+  commentElement.value = '';
+  hashtagElement.style.boxShadow = '';
 
   resetPreview();
   closeSlider();
@@ -61,6 +70,13 @@ const changeScale = (evt) => {
   }
 };
 
+const onEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closePicture();
+  }
+};
+
 newImage.addEventListener('change', onNewImageChange.bind(null, openPicture));
 
 cancelButton.addEventListener('click', () => {
@@ -70,3 +86,6 @@ cancelButton.addEventListener('click', () => {
 scale.addEventListener('click', (evt) => {
   changeScale(evt);
 });
+
+hashtagElement.addEventListener('input', onHashtagElementInput);
+commentElement.addEventListener('input', onCommentElementInput);

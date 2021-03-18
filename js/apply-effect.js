@@ -95,7 +95,7 @@ const onEffectsListChange = (evt) => {
   const effect = evt.target.value;
 
   sliderContainer.classList.remove('hidden');
-  photoPreview.className = 'effects__preview';
+  photoPreview.className = '';
   photoPreview.classList.add(`effects__preview--${effect}`);
 
   if (effect !== effects.none.value) {
@@ -124,7 +124,7 @@ const onEffectsListChange = (evt) => {
 
 const closeSlider = () => {
   sliderElement.noUiSlider.destroy();
-  photoPreview.className = 'effects__preview';
+  photoPreview.className = '';
   photoPreview.style.filter = '';
 
   effectsList.removeEventListener('change', onEffectsListChange);
