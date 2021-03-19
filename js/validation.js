@@ -2,17 +2,31 @@ const COMMENT_MAX_LENGTH = 140;
 const HASHTAG__MAX_LENGTH = 20;
 const HASHTAG_AMOUNT = 5;
 const BORDER_STYLE_INVALID = 'inset 0 0 0 3px red';
+const BORDER_STYLE_NONE = '';
 const FIRST_SYMBOL_REGULAR = /^#{1,19}/g;
 const REGULAR = /^#[a-zA-Zа-яА-ЯёЁ\d]{1,100}\s?$/g;
+
+const messages = {
+  none: '',
+  missingHashtag: 'Хэш-тег начинается с символа #',
+  otherSymbols: 'Хэш-тег должен состоять из букв и чисел, не может содержать спецсимволы, символы пунктуации, эмодзи',
+  extraSymbolsInHashtag: 'В одном хеш-теге допускается только 20 символов, включая решетку',
+  manyHashtags: 'Допускается только 5 уникальных хеш-тегов',
+  extraSymbolsInComment: 'В одном комментарии допускается только 140 символов',
+};
 
 const hashtagElement = document.querySelector('.text__hashtags');
 const commentElement = document.querySelector('.text__description');
 
+const showMsg = (element, msg, style) => {
+  element.setCustomValidity(msg);
+  element.style.boxShadow = style;
+};
+
 const createValidatedHashtags = (inputValue) => {
 
   if (inputValue === '') {
-    hashtagElement.setCustomValidity('');
-    hashtagElement.style.boxShadow = '';
+    showMsg(hashtagElement, messages.none, BORDER_STYLE_NONE);
 
     return;
   }
@@ -22,33 +36,28 @@ const createValidatedHashtags = (inputValue) => {
 
   hashtags.forEach((element, index) => {
     if (!element.match(FIRST_SYMBOL_REGULAR)) {
-      hashtagElement.setCustomValidity('Хэш-тег начинается с символа #');
-      hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
+      showMsg(hashtagElement, messages.missingHashtag, BORDER_STYLE_INVALID);
       hashtags.splice(index);
 
     } else if (!element.match(REGULAR)) {
-      hashtagElement.setCustomValidity('Хэш-тег должен состоять из букв и чисел, не может содержать спецсимволы, символы пунктуации, эмодзи');
-      hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
+      showMsg(hashtagElement, messages.otherSymbols, BORDER_STYLE_INVALID);
       hashtags.splice(index);
 
     } else if (element.length > HASHTAG__MAX_LENGTH) {
-      hashtagElement.setCustomValidity(`Удалите лишние ${element.length - HASHTAG__MAX_LENGTH} симв.`);
-      hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
+      showMsg(hashtagElement, messages.extraSymbolsInHashtag, BORDER_STYLE_INVALID);
 
     } else {
       hashtags.push(element);
       hashtags = Array.from(new Set(hashtags));
 
-      hashtagElement.setCustomValidity('');
-      hashtagElement.style.boxShadow = '';
+      showMsg(hashtagElement, messages.none, BORDER_STYLE_NONE);
     }
 
     hashtagElement.reportValidity();
   });
 
   if (hashtags.length > HASHTAG_AMOUNT) {
-    hashtagElement.setCustomValidity(`Допускается только ${HASHTAG_AMOUNT} уникальных хеш-тегов`);
-    hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
+    showMsg(hashtagElement, messages.manyHashtags, BORDER_STYLE_INVALID);
   }
 
   hashtagElement.value = `${hashtags.join(' ')} `;
@@ -59,11 +68,9 @@ const createValidatedHashtags = (inputValue) => {
 
 const validateComments = (length) => {
   if (length > COMMENT_MAX_LENGTH) {
-    commentElement.setCustomValidity(`Удалите лишние ${length - COMMENT_MAX_LENGTH} симв.`);
-    commentElement.style.boxShadow = BORDER_STYLE_INVALID;
+    showMsg(commentElement, messages.extraSymbolsInComment, BORDER_STYLE_INVALID);
   } else {
-    commentElement.setCustomValidity('');
-    commentElement.style.boxShadow = '';
+    showMsg(commentElement, messages.none, BORDER_STYLE_NONE);
   }
 
   commentElement.reportValidity();
