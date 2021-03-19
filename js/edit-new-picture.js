@@ -12,7 +12,7 @@ import {
 import {
   hashtagElement,
   commentElement,
-  onHashtagElementInput,
+  onHashtagElementChange,
   onCommentElementInput
 } from './validation.js';
 
@@ -87,5 +87,5 @@ scale.addEventListener('click', (evt) => {
   changeScale(evt);
 });
 
-hashtagElement.addEventListener('input', onHashtagElementInput);
+hashtagElement.addEventListener('change', onHashtagElementChange);
 commentElement.addEventListener('input', onCommentElementInput);

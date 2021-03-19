@@ -9,6 +9,7 @@ const hashtagElement = document.querySelector('.text__hashtags');
 const commentElement = document.querySelector('.text__description');
 
 const createValidatedHashtags = (inputValue) => {
+
   if (inputValue === '') {
     hashtagElement.setCustomValidity('');
     hashtagElement.style.boxShadow = '';
@@ -16,8 +17,8 @@ const createValidatedHashtags = (inputValue) => {
     return;
   }
 
-  let hashtags;
-  hashtags = inputValue.trim().toLowerCase().split(' ');
+  let hashtags = [];
+  hashtags = inputValue.trim().toLowerCase().split(/ +/g);
 
   hashtags.forEach((element, index) => {
     if (!element.match(FIRST_SYMBOL_REGULAR)) {
@@ -50,6 +51,7 @@ const createValidatedHashtags = (inputValue) => {
     hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
   }
 
+  hashtagElement.value = hashtags.join(' ');
   hashtagElement.reportValidity();
 
   return hashtags;
@@ -67,7 +69,7 @@ const validateComments = (length) => {
   commentElement.reportValidity();
 };
 
-const onHashtagElementInput = (evt) => {
+const onHashtagElementChange = (evt) => {
   const value = evt.target.value;
   createValidatedHashtags(value);
 };
@@ -80,6 +82,6 @@ const onCommentElementInput = (evt) => {
 export {
   hashtagElement,
   commentElement,
-  onHashtagElementInput,
+  onHashtagElementChange,
   onCommentElementInput
 }
