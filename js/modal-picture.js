@@ -2,8 +2,6 @@ import {
   isEscEvent,
   isEnterEvent
 } from './util.js';
-import {pictures} from './show-pictures.js';
-import {photos} from './data.js';
 
 const LI_CLASS_NAME = 'social__comment';
 const COMMENT_AVATAR_SIZE = 35;
@@ -44,6 +42,7 @@ const openModalPicture = (photo) => {
   modalPicture.classList.remove('hidden');
 
   bigPicture.src = photo.url;
+  bigPicture.alt = '';
   likesCount.textContent = photo.likes;
   commentsCount.textContent = photo.comments.length;
   socialCaption.textContent = photo.description;
@@ -83,12 +82,4 @@ const onEnterKeydown = (evt) => {
 
 const onCancelButtonClick = () => closeModalPicture();
 
-const onPicturesClick = (evt) => {
-  if (evt.target.matches('.picture__img')) {
-    const arrayIndex = evt.target.dataset.id - 1;
-
-    openModalPicture(photos[arrayIndex]);
-  }
-};
-
-pictures.addEventListener('click', onPicturesClick);
+export {openModalPicture};

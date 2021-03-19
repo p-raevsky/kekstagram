@@ -4,7 +4,28 @@ import './edit-new-picture.js';
 import './apply-effect.js';
 import './validation.js';
 
-import {showPictures} from './show-pictures.js';
-import {photos} from './data.js';
+import {
+  pictures,
+  showPictures
+} from './show-pictures.js';
+import {getData} from './api.js';
+import {openModalPicture} from './modal-picture.js';
+import {showAlert} from './util.js';
 
-showPictures(photos);
+let currentData = [];
+
+const onPicturesClick = (evt) => {
+  if (evt.target.matches('.picture__img')) {
+    const arrayIndex = evt.target.dataset.id;
+
+    openModalPicture(currentData[arrayIndex]);
+  }
+};
+
+getData(showAlert)
+  .then(data => {
+    currentData = data;
+    showPictures(data);
+  });
+
+pictures.addEventListener('click', onPicturesClick);
