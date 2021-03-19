@@ -33,6 +33,8 @@ const openPicture = () => {
   controlValue.value = `${MAX_VALUE_CONTROL}%`;
 
   document.addEventListener('keydown', onEscKeydown);
+  hashtagElement.addEventListener('change', onHashtagElementChange);
+  commentElement.addEventListener('input', onCommentElementInput);
 };
 
 const closePicture = () => {
@@ -53,6 +55,8 @@ const closePicture = () => {
   closeSlider();
 
   document.removeEventListener('keydown', onEscKeydown);
+  hashtagElement.removeEventListener('change', onHashtagElementChange);
+  commentElement.removeEventListener('input', onCommentElementInput);
 };
 
 const changeScale = (evt) => {
@@ -86,6 +90,3 @@ cancelButton.addEventListener('click', () => {
 scale.addEventListener('click', (evt) => {
   changeScale(evt);
 });
-
-hashtagElement.addEventListener('change', onHashtagElementChange);
-commentElement.addEventListener('input', onCommentElementInput);

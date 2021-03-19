@@ -51,7 +51,7 @@ const createValidatedHashtags = (inputValue) => {
     hashtagElement.style.boxShadow = BORDER_STYLE_INVALID;
   }
 
-  hashtagElement.value = hashtags.join(' ');
+  hashtagElement.value = `${hashtags.join(' ')} `;
   hashtagElement.reportValidity();
 
   return hashtags;
