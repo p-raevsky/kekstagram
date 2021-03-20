@@ -15,15 +15,22 @@ import {
   onHashtagElementChange,
   onCommentElementInput
 } from './validation.js';
+import {sendData} from './api.js';
 
 const MIN_VALUE_CONTROL = 25;
 const MAX_VALUE_CONTROL = 100;
+const Z_INDEX_VALUE = 1000;
+
+const main = document.querySelector('main');
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
 const body = document.querySelector('body');
 const imgContainer = document.querySelector('.img-upload__overlay');
 const cancelButton = imgContainer.querySelector('#upload-cancel');
 const scale = imgContainer.querySelector('.scale');
 const controlValue = imgContainer.querySelector('.scale__control--value');
+const newImageForm = document.querySelector('.img-upload__form');
 
 const openPicture = () => {
   createSlider();
@@ -32,9 +39,10 @@ const openPicture = () => {
   body.classList.add('modal-open');
   controlValue.value = `${MAX_VALUE_CONTROL}%`;
 
-  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('keydown', onEscKeydownInPicture);
   hashtagElement.addEventListener('change', onHashtagElementChange);
   commentElement.addEventListener('input', onCommentElementInput);
+  newImageForm.addEventListener('submit', onAdFormSubmit);
 };
 
 const closePicture = () => {
@@ -54,9 +62,10 @@ const closePicture = () => {
   resetPreview();
   closeSlider();
 
-  document.removeEventListener('keydown', onEscKeydown);
+  document.removeEventListener('keydown', onEscKeydownInPicture);
   hashtagElement.removeEventListener('change', onHashtagElementChange);
   commentElement.removeEventListener('input', onCommentElementInput);
+  newImageForm.removeEventListener('submit', onAdFormSubmit);
 };
 
 const changeScale = (evt) => {
@@ -74,10 +83,70 @@ const changeScale = (evt) => {
   }
 };
 
-const onEscKeydown = (evt) => {
+const onEscKeydownInPicture = (evt) => {
   if (isEscEvent(evt)) {
     evt.preventDefault();
     closePicture();
+  }
+};
+
+const onAdFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(evt.target);
+
+  sendData(
+    () => {
+      showPopup(successTemplate);
+      closePicture();
+    },
+    () => {
+      showPopup(errorTemplate);
+      document.removeEventListener('keydown', onEscKeydownInPicture);
+    },
+    formData,
+  );
+};
+
+const showPopup = (elementTemplate) => {
+  const element = elementTemplate.cloneNode(true);
+  const button = element.querySelector('button');
+
+  element.style.zIndex = Z_INDEX_VALUE;
+
+  main.appendChild(element);
+
+  button.addEventListener('click', () => closePopup());
+  document.addEventListener('keydown', onEscKeydownInPopup);
+  document.addEventListener ('click', (evt) => {
+    if (evt.target.className !== 'success' || evt.target.className !== 'error') {
+      element.remove();
+    }
+  });
+};
+
+const removePopup =(element) => {
+  element.remove();
+  const button = element.querySelector('button');
+  button.removeEventListener('click', () => closePopup());
+};
+
+const closePopup = () => {
+  const successElement = document.querySelector('.success');
+  const errorElement = document.querySelector('.error');
+
+  successElement
+    ? removePopup(successElement)
+    : removePopup(errorElement);
+
+  document.removeEventListener('keydown', onEscKeydownInPopup);
+};
+
+const onEscKeydownInPopup = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closePopup();
+    document.addEventListener('keydown', onEscKeydownInPicture);
   }
 };
 

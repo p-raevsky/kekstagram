@@ -24,7 +24,6 @@ const showMsg = (element, msg, style) => {
 };
 
 const createValidatedHashtags = (inputValue) => {
-
   if (inputValue === '') {
     showMsg(hashtagElement, messages.none, BORDER_STYLE_NONE);
 
@@ -60,7 +59,7 @@ const createValidatedHashtags = (inputValue) => {
     showMsg(hashtagElement, messages.manyHashtags, BORDER_STYLE_INVALID);
   }
 
-  hashtagElement.value = `${hashtags.join(' ')} `;
+  hashtagElement.value = hashtags.join(' ');
   hashtagElement.reportValidity();
 
   return hashtags;
