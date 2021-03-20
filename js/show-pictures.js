@@ -1,3 +1,7 @@
+import {getData} from './api.js';
+import {showAlert} from './util.js';
+import {openModalPicture} from './modal-picture.js';
+
 const pictures = document.querySelector('.pictures');
 
 const createPictureTemplate = (element) => {
@@ -27,7 +31,20 @@ const showPictures = (photos) => {
   pictures.appendChild(fragment);
 };
 
-export {
-  pictures,
-  showPictures
+const onPicturesClick = (evt) => {
+  if (evt.target.matches('.picture__img')) {
+    const arrayIndex = evt.target.dataset.id;
+
+    openModalPicture(currentData[arrayIndex]);
+  }
 };
+
+let currentData = [];
+
+getData(showAlert)
+  .then(data => {
+    currentData = data;
+    showPictures(data);
+  });
+
+pictures.addEventListener('click', onPicturesClick);

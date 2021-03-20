@@ -49,7 +49,6 @@ const resetPreview = () => {
 export {
   newImage,
   photoPreview,
-  effectsPreview,
   resetPreview,
   onNewImageChange
 };
