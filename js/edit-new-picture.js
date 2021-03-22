@@ -2,7 +2,7 @@ import {
   newImage,
   photoPreview,
   resetPreview,
-  onNewImageChange
+  uploadPhoto
 } from './upload-new-picture.js';
 import {isEscEvent} from './util.js';
 import {
@@ -10,10 +10,8 @@ import {
   closeSlider
 } from './apply-effect.js';
 import {
-  hashtagElement,
-  commentElement,
-  onHashtagElementChange,
-  onCommentElementInput
+  createValidatedHashtags,
+  validateComments
 } from './validation.js';
 import {sendData} from './api.js';
 
@@ -31,6 +29,8 @@ const cancelButton = imgContainer.querySelector('#upload-cancel');
 const scale = imgContainer.querySelector('.scale');
 const controlValue = imgContainer.querySelector('.scale__control--value');
 const newImageForm = document.querySelector('.img-upload__form');
+const hashtagElement = document.querySelector('.text__hashtags');
+const commentElement = document.querySelector('.text__description');
 
 const openPicture = () => {
   createSlider();
@@ -39,19 +39,13 @@ const openPicture = () => {
   body.classList.add('modal-open');
   controlValue.value = `${MAX_VALUE_CONTROL}%`;
 
-  document.addEventListener('keydown', onEscKeydownInPicture);
+  document.addEventListener('keydown', onDocumentKeydown);
   hashtagElement.addEventListener('change', onHashtagElementChange);
   commentElement.addEventListener('input', onCommentElementInput);
   newImageForm.addEventListener('submit', onAdFormSubmit);
 };
 
 const closePicture = () => {
-  const currentElement = document.activeElement.id;
-
-  if (currentElement === hashtagElement.id || currentElement === commentElement.id) {
-    return;
-  }
-
   imgContainer.classList.add('hidden');
   body.classList.remove('modal-open');
   newImage.value = '';
@@ -62,11 +56,87 @@ const closePicture = () => {
   resetPreview();
   closeSlider();
 
-  document.removeEventListener('keydown', onEscKeydownInPicture);
+  document.removeEventListener('keydown', onDocumentKeydown);
   hashtagElement.removeEventListener('change', onHashtagElementChange);
   commentElement.removeEventListener('input', onCommentElementInput);
   newImageForm.removeEventListener('submit', onAdFormSubmit);
 };
+
+let isSuccessPopupOpen = false;
+let isErorrPopupOpen = false;
+
+const onAdFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(evt.target);
+
+  sendData(
+    () => {
+      showPopup(successTemplate);
+      closePicture();
+      document.addEventListener('keydown', onDocumentKeydown);
+    },
+    () => {
+      showPopup(errorTemplate);
+      isErorrPopupOpen = true;
+    },
+    formData,
+  );
+};
+
+const showPopup = (elementTemplate) => {
+  const element = elementTemplate.cloneNode(true);
+  const button = element.querySelector('button');
+
+  element.style.zIndex = Z_INDEX_VALUE;
+  main.appendChild(element);
+
+  if (elementTemplate.className === 'success') {
+    isSuccessPopupOpen = true;
+
+  } else {
+    isErorrPopupOpen = true;
+  }
+
+  button.addEventListener('click', () => closePopup());
+  document.addEventListener ('click', onDocumentClick);
+};
+
+const removePopup =(element) => {
+  element.remove();
+};
+
+const closePopup = () => {
+  const successElement = document.querySelector('.success');
+  const errorElement = document.querySelector('.error');
+
+  isSuccessPopupOpen = false;
+  isErorrPopupOpen = false;
+
+  successElement
+    ? removePopup(successElement)
+    : removePopup(errorElement);
+
+  document.removeEventListener ('click', onDocumentClick);
+};
+
+const onDocumentKeydown = (evt) => {
+  if (isEscEvent(evt) && (isSuccessPopupOpen || isErorrPopupOpen)) {
+    evt.preventDefault();
+    closePopup();
+    return;
+  }
+
+  closePicture();
+};
+
+const onDocumentClick = (evt) => {
+  if (evt.target.closest('.success__inner') || evt.target.closest('.error__inner')) {
+    return;
+  }
+
+  closePopup();
+}
 
 const changeScale = (evt) => {
   let currentValue = parseInt(controlValue.value);
@@ -83,74 +153,33 @@ const changeScale = (evt) => {
   }
 };
 
-const onEscKeydownInPicture = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closePicture();
-  }
+const onHashtagElementChange = (evt) => {
+  const value = evt.target.value;
+  createValidatedHashtags(hashtagElement, value);
 };
 
-const onAdFormSubmit = (evt) => {
-  evt.preventDefault();
-
-  const formData = new FormData(evt.target);
-
-  sendData(
-    () => {
-      showPopup(successTemplate);
-      closePicture();
-    },
-    () => {
-      showPopup(errorTemplate);
-      document.removeEventListener('keydown', onEscKeydownInPicture);
-    },
-    formData,
-  );
+const onCommentElementInput = (evt) => {
+  const valueLength = evt.target.value.length;
+  validateComments(commentElement, valueLength);
 };
 
-const showPopup = (elementTemplate) => {
-  const element = elementTemplate.cloneNode(true);
-  const button = element.querySelector('button');
+hashtagElement.addEventListener('focus', () => {
+  document.removeEventListener('keydown', onDocumentKeydown);
+});
 
-  element.style.zIndex = Z_INDEX_VALUE;
+hashtagElement.addEventListener('blur', () => {
+  document.addEventListener('keydown', onDocumentKeydown);
+});
 
-  main.appendChild(element);
+commentElement.addEventListener('focus', () => {
+  document.removeEventListener('keydown', onDocumentKeydown);
+});
 
-  button.addEventListener('click', () => closePopup());
-  document.addEventListener('keydown', onEscKeydownInPopup);
-  document.addEventListener ('click', (evt) => {
-    if (evt.target.className !== 'success' || evt.target.className !== 'error') {
-      element.remove();
-    }
-  });
-};
+commentElement.addEventListener('blur', () => {
+  document.addEventListener('keydown', onDocumentKeydown);
+});
 
-const removePopup =(element) => {
-  element.remove();
-  const button = element.querySelector('button');
-  button.removeEventListener('click', () => closePopup());
-};
-
-const closePopup = () => {
-  const successElement = document.querySelector('.success');
-  const errorElement = document.querySelector('.error');
-
-  successElement
-    ? removePopup(successElement)
-    : removePopup(errorElement);
-
-  document.removeEventListener('keydown', onEscKeydownInPopup);
-};
-
-const onEscKeydownInPopup = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closePopup();
-    document.addEventListener('keydown', onEscKeydownInPicture);
-  }
-};
-
-newImage.addEventListener('change', onNewImageChange.bind(null, openPicture));
+newImage.addEventListener('change', () => uploadPhoto(openPicture));
 
 cancelButton.addEventListener('click', () => {
   closePicture();

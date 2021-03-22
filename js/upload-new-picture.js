@@ -9,7 +9,7 @@ const photo = document.querySelector('.img-upload__preview');
 const photoPreview = document.querySelector('.img-upload__preview img');
 const effectsPreview = document.querySelectorAll('.effects__preview');
 
-const onNewImageChange = (onModalOpen) => {
+const uploadPhoto = (onModalOpen) => {
   photoPreview.src = '';
 
   let file = newImage.files[0];
@@ -35,9 +35,9 @@ const onNewImageChange = (onModalOpen) => {
 };
 
 const changeEffectsPreview = (result = '') => {
-  for (let i = 0; i < effectsPreview.length; i++) {
-    effectsPreview[i].style.backgroundImage = `url(${result})`;
-  }
+  effectsPreview.forEach((preview) => {
+    preview.style.backgroundImage = `url(${result})`;
+  });
 };
 
 const resetPreview = () => {
@@ -50,5 +50,5 @@ export {
   newImage,
   photoPreview,
   resetPreview,
-  onNewImageChange
+  uploadPhoto
 };

@@ -52,28 +52,28 @@ const openModalPicture = (photo) => {
   socialCommentCount.setAttribute('hidden', '');
   commentsLoader.setAttribute('hidden', '');
 
-  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('keydown', onDocumentKeydown);
   cancelButton.addEventListener('click', onCancelButtonClick);
-  cancelButton.addEventListener('keydown', onEnterKeydown);
+  cancelButton.addEventListener('keydown', onCancelButtonKeydown);
 };
 
 const closeModalPicture = () => {
   modalPicture.classList.add('hidden');
   body.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', onEscKeydown);
+  document.removeEventListener('keydown', onDocumentKeydown);
   cancelButton.removeEventListener('click', onCancelButtonClick);
-  cancelButton.removeEventListener('keydown', onEnterKeydown);
+  cancelButton.removeEventListener('keydown', onCancelButtonKeydown);
 };
 
-const onEscKeydown = (evt) => {
+const onDocumentKeydown = (evt) => {
   if (isEscEvent(evt)) {
     evt.preventDefault();
     closeModalPicture();
   }
 };
 
-const onEnterKeydown = (evt) => {
+const onCancelButtonKeydown = (evt) => {
   if (isEnterEvent(evt)) {
     evt.preventDefault();
     closeModalPicture();
