@@ -10,7 +10,7 @@ import {
   closeSlider
 } from './apply-effect.js';
 import {
-  createValidatedHashtags,
+  validateHashtags,
   validateComments
 } from './validation.js';
 import {sendData} from './api.js';
@@ -40,7 +40,7 @@ const openPicture = () => {
   controlValue.value = `${MAX_VALUE_CONTROL}%`;
 
   document.addEventListener('keydown', onDocumentKeydown);
-  hashtagElement.addEventListener('change', onHashtagElementChange);
+  hashtagElement.addEventListener('input', onHashtagElementInput);
   commentElement.addEventListener('input', onCommentElementInput);
   newImageForm.addEventListener('submit', onAdFormSubmit);
 };
@@ -57,7 +57,7 @@ const closePicture = () => {
   closeSlider();
 
   document.removeEventListener('keydown', onDocumentKeydown);
-  hashtagElement.removeEventListener('change', onHashtagElementChange);
+  hashtagElement.removeEventListener('input', onHashtagElementInput);
   commentElement.removeEventListener('input', onCommentElementInput);
   newImageForm.removeEventListener('submit', onAdFormSubmit);
 };
@@ -113,9 +113,7 @@ const closePopup = () => {
   isSuccessPopupOpen = false;
   isErorrPopupOpen = false;
 
-  successElement
-    ? removePopup(successElement)
-    : removePopup(errorElement);
+  successElement ? removePopup(successElement) : removePopup(errorElement);
 
   document.removeEventListener ('click', onDocumentClick);
 };
@@ -153,9 +151,9 @@ const changeScale = (evt) => {
   }
 };
 
-const onHashtagElementChange = (evt) => {
-  const value = evt.target.value;
-  createValidatedHashtags(hashtagElement, value);
+const onHashtagElementInput = (evt) => {
+  const element = evt.target;
+  validateHashtags(element);
 };
 
 const onCommentElementInput = (evt) => {

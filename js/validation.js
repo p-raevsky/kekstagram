@@ -3,75 +3,95 @@ const HASHTAG__MAX_LENGTH = 20;
 const HASHTAG_AMOUNT = 5;
 const BORDER_STYLE_INVALID = 'inset 0 0 0 3px red';
 const BORDER_STYLE_NONE = '';
-const FIRST_SYMBOL_REGULAR = /^#{1,19}/g;
 const REGULAR = /^#[a-zA-Zа-яА-ЯёЁ\d]{1,100}\s?$/g;
 
 const messages = {
   none: '',
-  missingHashtag: 'Хэш-тег начинается с символа #',
-  otherSymbols: 'Хэш-тег должен состоять из букв и чисел, не может содержать спецсимволы, символы пунктуации, эмодзи',
+  otherSymbols: 'Хэш-тег начинается с символа # должен состоять из букв и чисел, не может содержать спецсимволы, символы пунктуации, эмодзи',
   extraSymbolsInHashtag: 'В одном хеш-теге допускается только 20 символов, включая решетку',
   manyHashtags: 'Допускается только 5 уникальных хеш-тегов',
+  sameHashtag: 'Один и тот же хэш-тег не может быть использован дважды',
   extraSymbolsInComment: 'В одном комментарии допускается только 140 символов',
 };
 
 const showMsg = (element, msg, style) => {
   element.setCustomValidity(msg);
   element.style.boxShadow = style;
+
+  element.reportValidity();
 };
 
-const createValidatedHashtags = (inputElement ,inputValue) => {
-  if (inputValue === '') {
+const addInvalidity = (message) => {
+  invalidities.push(message);
+};
+
+const getInvalidities = () => {
+  return invalidities.join('. \n');
+};
+
+let invalidities = [];
+
+const customHashtagValidation = (input) => {
+  invalidities = [];
+
+  let elementValue = input.value.trim().toLowerCase().split(/ +/g);
+
+  elementValue.forEach((element) => {
+    if (!element.match(REGULAR)) {
+      addInvalidity(messages.otherSymbols);
+    }
+
+    if (element.length > HASHTAG__MAX_LENGTH) {
+      addInvalidity(messages.extraSymbolsInHashtag);
+    }
+
+    if (elementValue.indexOf(element) !== elementValue.lastIndexOf(element)) {
+      addInvalidity(messages.sameHashtag);
+    }
+  });
+
+  if (elementValue.length > HASHTAG_AMOUNT) {
+    addInvalidity(messages.manyHashtags);
+  }
+
+  invalidities = Array.from(new Set(invalidities));
+};
+
+const validateHashtags = (input) => {
+  customHashtagValidation(input);
+
+  if (input.value.trim() === '') {
+    showMsg(input, messages.none, BORDER_STYLE_NONE);
+    invalidities = [];
+
+    return;
+  }
+
+  if (invalidities.length !== 0) {
+    const customMessage = getInvalidities();
+
+    showMsg(input, customMessage, BORDER_STYLE_INVALID);
+  } else {
+    showMsg(input, messages.none, BORDER_STYLE_NONE);
+  }
+
+};
+
+const validateComments = (inputElement, length) => {
+  if (inputElement.value === '') {
     showMsg(inputElement, messages.none, BORDER_STYLE_NONE);
 
     return;
   }
 
-  let hashtags = inputValue.trim().toLowerCase().split(/ +/g);
-
-  hashtags.forEach((element, index) => {
-    if (!element.match(FIRST_SYMBOL_REGULAR)) {
-      showMsg(inputElement, messages.missingHashtag, BORDER_STYLE_INVALID);
-      hashtags.splice(index);
-
-    } else if (!element.match(REGULAR)) {
-      showMsg(inputElement, messages.otherSymbols, BORDER_STYLE_INVALID);
-      hashtags.splice(index);
-
-    } else if (element.length > HASHTAG__MAX_LENGTH) {
-      showMsg(inputElement, messages.extraSymbolsInHashtag, BORDER_STYLE_INVALID);
-
-    } else {
-      hashtags.push(element);
-      hashtags = Array.from(new Set(hashtags));
-
-      showMsg(inputElement, messages.none, BORDER_STYLE_NONE);
-    }
-
-    inputElement.reportValidity();
-  });
-
-  if (hashtags.length > HASHTAG_AMOUNT) {
-    showMsg(inputElement, messages.manyHashtags, BORDER_STYLE_INVALID);
-  }
-
-  inputElement.value = hashtags.join(' ');
-  inputElement.reportValidity();
-
-  return hashtags;
-}
-
-const validateComments = (inputElement, length) => {
   if (length > COMMENT_MAX_LENGTH) {
     showMsg(inputElement, messages.extraSymbolsInComment, BORDER_STYLE_INVALID);
   } else {
     showMsg(inputElement, messages.none, BORDER_STYLE_NONE);
   }
-
-  inputElement.reportValidity();
 };
 
 export {
-  createValidatedHashtags,
+  validateHashtags,
   validateComments
 }
