@@ -1,4 +1,4 @@
-/* global _:readonly */
+import {debounce} from 'lodash';
 
 const ALERT_SHOW_TIME = 5000;
 const RERENDER_DELAY = 500;
@@ -61,7 +61,7 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-const delayBounce = (debouncedItem) => _.debounce(debouncedItem, RERENDER_DELAY);
+const delayBounce = (debouncedItem) => debounce(debouncedItem, RERENDER_DELAY);
 
 export {
   getRandomArray,

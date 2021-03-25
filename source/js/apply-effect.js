@@ -1,4 +1,5 @@
-/* global noUiSlider:readonly */
+import noUiSlider from 'noUiSlider';
+import 'nouislider/distribute/nouislider.css';
 
 import {photoPreview} from './upload-new-picture.js';
 
