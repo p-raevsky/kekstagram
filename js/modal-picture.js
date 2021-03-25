@@ -5,6 +5,7 @@ import {
 
 const LI_CLASS_NAME = 'social__comment';
 const COMMENT_AVATAR_SIZE = 35;
+const COMMENTS_AMOUNT = 5;
 
 const body = document.querySelector('body');
 const modalPicture = document.querySelector('.big-picture');
@@ -35,6 +36,17 @@ const createComments = (comments) => {
       socialComments.appendChild(newLi);
     });
   }
+
+  if (comments.length >= COMMENTS_AMOUNT) {
+    const commentsList = socialComments.querySelectorAll('.social__comment');
+
+    for (let i = 0; i < comments.length; i++) {
+      if (i >= COMMENTS_AMOUNT) {
+        commentsList[i].classList.add('hidden');
+        commentsLoader.removeAttribute('hidden');
+      }
+    }
+  }
 };
 
 const openModalPicture = (photo) => {
@@ -46,15 +58,15 @@ const openModalPicture = (photo) => {
   likesCount.textContent = photo.likes;
   commentsCount.textContent = photo.comments.length;
   socialCaption.textContent = photo.description;
-
-  createComments(photo.comments);
-
   socialCommentCount.setAttribute('hidden', '');
   commentsLoader.setAttribute('hidden', '');
+
+  createComments(photo.comments);
 
   document.addEventListener('keydown', onDocumentKeydown);
   cancelButton.addEventListener('click', onCancelButtonClick);
   cancelButton.addEventListener('keydown', onCancelButtonKeydown);
+  commentsLoader.addEventListener('click', onСommentsLoaderClick);
 };
 
 const closeModalPicture = () => {
@@ -64,7 +76,19 @@ const closeModalPicture = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
   cancelButton.removeEventListener('click', onCancelButtonClick);
   cancelButton.removeEventListener('keydown', onCancelButtonKeydown);
+  commentsLoader.removeEventListener('click', onСommentsLoaderClick);
 };
+
+const onСommentsLoaderClick = () => {
+  const commentsList = socialComments.querySelectorAll('.social__comment');
+
+  for (let i = 0; i < commentsList.length; i++) {
+    if (i >= COMMENTS_AMOUNT) {
+      commentsList[i].classList.remove('hidden');
+      commentsLoader.setAttribute('hidden', '');
+    }
+  }
+}
 
 const onDocumentKeydown = (evt) => {
   if (isEscEvent(evt)) {

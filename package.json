@@ -16,7 +16,9 @@
     "eslint-config-htmlacademy": "2.0.0"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lodash.debounce": "4.0.8"
+  },
   "scripts": {
     "start": "browser-sync start --server --no-ui --files \"js/**/*.js\"",
     "test": "eslint js/"

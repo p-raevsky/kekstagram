@@ -27,7 +27,16 @@ const showPictures = (photos) => {
   picturesList.appendChild(fragment);
 };
 
+const removePictures = () => {
+  const pictures = picturesList.querySelectorAll('.picture');
+
+  pictures.forEach((picture) => {
+    picture.remove();
+  });
+};
+
 export {
   picturesList,
-  showPictures
+  showPictures,
+  removePictures
 };

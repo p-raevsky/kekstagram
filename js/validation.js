@@ -31,7 +31,7 @@ const getInvalidities = () => {
 
 let invalidities = [];
 
-const customHashtagValidation = (input) => {
+const getInvaliditiesArray = (input) => {
   invalidities = [];
 
   let elementValue = input.value.trim().toLowerCase().split(/ +/g);
@@ -55,30 +55,31 @@ const customHashtagValidation = (input) => {
   }
 
   invalidities = Array.from(new Set(invalidities));
+
+  return invalidities;
 };
 
 const validateHashtags = (input) => {
-  customHashtagValidation(input);
+  getInvaliditiesArray(input);
 
-  if (input.value.trim() === '') {
+  if (!input.value.trim()) {
     showMsg(input, messages.none, BORDER_STYLE_NONE);
     invalidities = [];
 
     return;
   }
 
-  if (invalidities.length !== 0) {
+  if (invalidities.length) {
     const customMessage = getInvalidities();
 
     showMsg(input, customMessage, BORDER_STYLE_INVALID);
   } else {
     showMsg(input, messages.none, BORDER_STYLE_NONE);
   }
-
 };
 
 const validateComments = (inputElement, length) => {
-  if (inputElement.value === '') {
+  if (!inputElement.value) {
     showMsg(inputElement, messages.none, BORDER_STYLE_NONE);
 
     return;

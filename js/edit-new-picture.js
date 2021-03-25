@@ -55,6 +55,7 @@ const closePicture = () => {
 
   resetPreview();
   closeSlider();
+  validateHashtags(hashtagElement);
 
   document.removeEventListener('keydown', onDocumentKeydown);
   hashtagElement.removeEventListener('input', onHashtagElementInput);

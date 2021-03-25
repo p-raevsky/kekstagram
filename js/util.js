@@ -1,4 +1,7 @@
+/* global _:readonly */
+
 const ALERT_SHOW_TIME = 5000;
+const RERENDER_DELAY = 500;
 
 const alertValues = {
   zIndex: 1000,
@@ -12,13 +15,23 @@ const alertValues = {
   backgroundColor: 'rgb(255, 0, 0, 0.8)',
   color:'white',
 };
-//удалить getRandomNumber, если не буду использовать
+
 const getRandomNumber = (minNumber, maxNumber) => {
   return +(Math.random() * (maxNumber - minNumber) + minNumber).toFixed();
 };
-//удалить getRandomArrayElement, если не буду использовать
-const getRandomArrayElement = (elements) => {
-  return elements[Math.floor(Math.random() * elements.length)];
+
+const getRandomArray = (minNumber, maxNumber, numberRandomPhotos) => {
+  let array = [];
+
+  while (array.length < maxNumber) {
+    const item = getRandomNumber(minNumber, maxNumber);
+
+    if (array.indexOf(item) === -1) {
+      array.push(item);
+    }
+  }
+
+  return array.slice(0, numberRandomPhotos);
 };
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
@@ -48,10 +61,12 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
+const delayBounce = (debouncedItem) => _.debounce(debouncedItem, RERENDER_DELAY);
+
 export {
-  getRandomNumber,
-  getRandomArrayElement,
+  getRandomArray,
   isEscEvent,
   isEnterEvent,
-  showAlert
+  showAlert,
+  delayBounce
 };
