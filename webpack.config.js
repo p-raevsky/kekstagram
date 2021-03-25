@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './source/js/main.js',
@@ -7,11 +8,14 @@ module.exports = {
     filename: 'main.bundle.js',
     path: path.resolve(__dirname, 'build/js'),
   },
+  plugins: [new MiniCssExtractPlugin({
+    filename: '../css/nouislider.css',
+  })],
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   }

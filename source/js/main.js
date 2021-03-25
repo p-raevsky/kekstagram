@@ -1,11 +1,11 @@
 import './edit-new-picture.js';
 
 import {getData} from './api.js';
+import {openModalPicture} from './modal-picture.js';
 import {
   showAlert,
   delayBounce
 } from './util.js';
-import {openModalPicture} from './modal-picture.js';
 import {
   picturesList,
   showPictures
