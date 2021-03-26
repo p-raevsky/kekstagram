@@ -1,7 +1,4 @@
-import {
-  isEscEvent,
-  isEnterEvent
-} from './util.js';
+import {isEscEvent} from './util.js';
 
 const LI_CLASS_NAME = 'social__comment';
 const COMMENT_AVATAR_SIZE = 35;
@@ -67,7 +64,6 @@ const openModalPicture = (photo) => {
 
   document.addEventListener('keydown', onDocumentKeydown);
   cancelButton.addEventListener('click', onCancelButtonClick);
-  cancelButton.addEventListener('keydown', onCancelButtonKeydown);
   commentsLoader.addEventListener('click', onСommentsLoaderClick);
 };
 
@@ -77,7 +73,6 @@ const closeModalPicture = () => {
 
   document.removeEventListener('keydown', onDocumentKeydown);
   cancelButton.removeEventListener('click', onCancelButtonClick);
-  cancelButton.removeEventListener('keydown', onCancelButtonKeydown);
   commentsLoader.removeEventListener('click', onСommentsLoaderClick);
 };
 
@@ -101,13 +96,6 @@ const onСommentsLoaderClick = () => {
 
 const onDocumentKeydown = (evt) => {
   if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closeModalPicture();
-  }
-};
-
-const onCancelButtonKeydown = (evt) => {
-  if (isEnterEvent(evt)) {
     evt.preventDefault();
     closeModalPicture();
   }

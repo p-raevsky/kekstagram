@@ -36,8 +36,6 @@ const getRandomArray = (minNumber, maxNumber, numberRandomPhotos) => {
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const isEnterEvent = (evt) => evt.key === 'Enter';
-
 const alertContainer = document.createElement('div');
 
 const showAlert = (message) => {
@@ -66,7 +64,6 @@ const delayBounce = (debouncedItem) => debounce(debouncedItem, RERENDER_DELAY);
 export {
   getRandomArray,
   isEscEvent,
-  isEnterEvent,
   showAlert,
   delayBounce
 };

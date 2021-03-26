@@ -25,7 +25,7 @@ const errorTemplate = document.querySelector('#error').content.querySelector('.e
 
 const body = document.querySelector('body');
 const imgContainer = document.querySelector('.img-upload__overlay');
-const effectLabel = imgContainer.querySelectorAll('.effects__label');
+const effectLabel = imgContainer.querySelector('.effects__radio');
 const cancelButton = imgContainer.querySelector('#upload-cancel');
 const scale = imgContainer.querySelector('.scale');
 const controlValue = imgContainer.querySelector('.scale__control--value');
@@ -47,13 +47,13 @@ const openPicture = () => {
 };
 
 const closePicture = () => {
-  imgContainer.classList.add('hidden');
   body.classList.remove('modal-open');
   newImage.value = '';
   hashtagElement.value = '';
   commentElement.value = '';
   hashtagElement.style.boxShadow = '';
   effectLabel.checked = true;
+  imgContainer.classList.add('hidden');
 
   resetPreview();
   closeSlider();

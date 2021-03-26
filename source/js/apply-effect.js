@@ -124,7 +124,11 @@ const onEffectsListChange = (evt) => {
 };
 
 const closeSlider = () => {
-  sliderElement.noUiSlider.destroy();
+
+  if (sliderElement.noUiSlider) {
+    sliderElement.noUiSlider.destroy();
+  }
+
   photoPreview.className = '';
   photoPreview.style.filter = '';
 
