@@ -39,6 +39,8 @@ const createComments = (comments) => {
 
   if (comments.length >= COMMENTS_AMOUNT) {
     const commentsList = socialComments.querySelectorAll('.social__comment');
+    socialCommentCount.removeAttribute('hidden');
+    socialCommentCount.textContent = `${COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
 
     for (let i = 0; i < comments.length; i++) {
       if (i >= COMMENTS_AMOUNT) {
@@ -80,15 +82,22 @@ const closeModalPicture = () => {
 };
 
 const onСommentsLoaderClick = () => {
+  const hiddenComments = socialComments.querySelectorAll('.social__comment.hidden');
   const commentsList = socialComments.querySelectorAll('.social__comment');
 
-  for (let i = 0; i < commentsList.length; i++) {
-    if (i >= COMMENTS_AMOUNT) {
-      commentsList[i].classList.remove('hidden');
-      commentsLoader.setAttribute('hidden', '');
+  socialCommentCount.textContent = `${commentsList.length - hiddenComments.length + COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
+
+  if (hiddenComments.length <= COMMENTS_AMOUNT) {
+    commentsLoader.setAttribute('hidden', '');
+    socialCommentCount.textContent = `${commentsList.length} из ${commentsList.length} комментариев`;
+  }
+
+  for (let i = 0; i < COMMENTS_AMOUNT; i++) {
+    if (hiddenComments[i]) {
+      hiddenComments[i].classList.remove('hidden');
     }
   }
-}
+};
 
 const onDocumentKeydown = (evt) => {
   if (isEscEvent(evt)) {

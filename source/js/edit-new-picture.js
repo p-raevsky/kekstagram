@@ -25,6 +25,7 @@ const errorTemplate = document.querySelector('#error').content.querySelector('.e
 
 const body = document.querySelector('body');
 const imgContainer = document.querySelector('.img-upload__overlay');
+const effectLabel = imgContainer.querySelectorAll('.effects__label');
 const cancelButton = imgContainer.querySelector('#upload-cancel');
 const scale = imgContainer.querySelector('.scale');
 const controlValue = imgContainer.querySelector('.scale__control--value');
@@ -52,6 +53,7 @@ const closePicture = () => {
   hashtagElement.value = '';
   commentElement.value = '';
   hashtagElement.style.boxShadow = '';
+  effectLabel.checked = true;
 
   resetPreview();
   closeSlider();
@@ -94,7 +96,6 @@ const showPopup = (elementTemplate) => {
 
   if (elementTemplate.className === 'success') {
     isSuccessPopupOpen = true;
-
   } else {
     isErorrPopupOpen = true;
   }
@@ -123,10 +124,16 @@ const onDocumentKeydown = (evt) => {
   if (isEscEvent(evt) && (isSuccessPopupOpen || isErorrPopupOpen)) {
     evt.preventDefault();
     closePopup();
+
     return;
   }
 
-  closePicture();
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    closePicture();
+
+    return;
+  }
 };
 
 const onDocumentClick = (evt) => {
