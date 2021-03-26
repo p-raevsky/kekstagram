@@ -12,14 +12,23 @@
   },
   "devDependencies": {
     "browser-sync": "2.26.14",
+    "browser-sync-webpack-plugin": "2.3.0",
+    "css-loader": "5.2.0",
     "eslint": "7.18.0",
-    "eslint-config-htmlacademy": "2.0.0"
+    "eslint-config-htmlacademy": "2.0.0",
+    "mini-css-extract-plugin": "1.3.9",
+    "webpack": "5.28.0",
+    "webpack-cli": "4.5.0"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lodash.debounce": "4.0.8",
+    "nouislider": "14.6.4"
+  },
   "scripts": {
-    "start": "browser-sync start --server --no-ui --files \"js/**/*.js\"",
-    "test": "eslint js/"
+    "build": "webpack --mode production",
+    "start": "browser-sync start --server \"build/\" --no-ui --files \"source/**/*.js\"",
+    "test": "eslint source/js/"
   },
   "engines": {
     "node": ">=12.0.0"

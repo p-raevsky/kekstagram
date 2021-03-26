@@ -1,13 +1,13 @@
-const pictures = document.querySelector('.pictures');
+const picturesList = document.querySelector('.pictures');
+const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const createPictureTemplate = (element) => {
-  const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const pictureElement = pictureTemplate.cloneNode(true);
   const pictureImage = pictureElement.querySelector('.picture__img');
   const pictureLikes = pictureElement.querySelector('.picture__likes');
   const pictureComments = pictureElement.querySelector('.picture__comments');
 
-  pictureImage.dataset.id = element.id;
+  pictureElement.dataset.id = element.id;
   pictureImage.src = element.url;
   pictureLikes.textContent = element.likes;
   pictureComments.textContent = element.comments.length;
@@ -24,10 +24,19 @@ const showPictures = (photos) => {
     fragment.appendChild(picture);
   });
 
-  pictures.appendChild(fragment);
+  picturesList.appendChild(fragment);
+};
+
+const removePictures = () => {
+  const pictures = picturesList.querySelectorAll('.picture');
+
+  pictures.forEach((picture) => {
+    picture.remove();
+  });
 };
 
 export {
-  pictures,
-  showPictures
+  picturesList,
+  showPictures,
+  removePictures
 };

@@ -1,12 +1,8 @@
-import {
-  isEscEvent,
-  isEnterEvent
-} from './util.js';
-import {pictures} from './show-pictures.js';
-import {photos} from './data.js';
+import {isEscEvent} from './util.js';
 
 const LI_CLASS_NAME = 'social__comment';
 const COMMENT_AVATAR_SIZE = 35;
+const COMMENTS_AMOUNT = 5;
 
 const body = document.querySelector('body');
 const modalPicture = document.querySelector('.big-picture');
@@ -37,6 +33,19 @@ const createComments = (comments) => {
       socialComments.appendChild(newLi);
     });
   }
+
+  if (comments.length >= COMMENTS_AMOUNT) {
+    const commentsList = socialComments.querySelectorAll('.social__comment');
+    socialCommentCount.removeAttribute('hidden');
+    socialCommentCount.textContent = `${COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
+
+    for (let i = 0; i < comments.length; i++) {
+      if (i >= COMMENTS_AMOUNT) {
+        commentsList[i].classList.add('hidden');
+        commentsLoader.removeAttribute('hidden');
+      }
+    }
+  }
 };
 
 const openModalPicture = (photo) => {
@@ -44,38 +53,49 @@ const openModalPicture = (photo) => {
   modalPicture.classList.remove('hidden');
 
   bigPicture.src = photo.url;
+  bigPicture.alt = '';
   likesCount.textContent = photo.likes;
   commentsCount.textContent = photo.comments.length;
   socialCaption.textContent = photo.description;
-
-  createComments(photo.comments);
-
   socialCommentCount.setAttribute('hidden', '');
   commentsLoader.setAttribute('hidden', '');
 
-  document.addEventListener('keydown', onEscKeydown);
+  createComments(photo.comments);
+
+  document.addEventListener('keydown', onDocumentKeydown);
   cancelButton.addEventListener('click', onCancelButtonClick);
-  cancelButton.addEventListener('keydown', onEnterKeydown);
+  commentsLoader.addEventListener('click', onСommentsLoaderClick);
 };
 
 const closeModalPicture = () => {
   modalPicture.classList.add('hidden');
   body.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', onEscKeydown);
+  document.removeEventListener('keydown', onDocumentKeydown);
   cancelButton.removeEventListener('click', onCancelButtonClick);
-  cancelButton.removeEventListener('keydown', onEnterKeydown);
+  commentsLoader.removeEventListener('click', onСommentsLoaderClick);
 };
 
-const onEscKeydown = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closeModalPicture();
+const onСommentsLoaderClick = () => {
+  const hiddenComments = socialComments.querySelectorAll('.social__comment.hidden');
+  const commentsList = socialComments.querySelectorAll('.social__comment');
+
+  socialCommentCount.textContent = `${commentsList.length - hiddenComments.length + COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
+
+  if (hiddenComments.length <= COMMENTS_AMOUNT) {
+    commentsLoader.setAttribute('hidden', '');
+    socialCommentCount.textContent = `${commentsList.length} из ${commentsList.length} комментариев`;
+  }
+
+  for (let i = 0; i < COMMENTS_AMOUNT; i++) {
+    if (hiddenComments[i]) {
+      hiddenComments[i].classList.remove('hidden');
+    }
   }
 };
 
-const onEnterKeydown = (evt) => {
-  if (isEnterEvent(evt)) {
+const onDocumentKeydown = (evt) => {
+  if (isEscEvent(evt)) {
     evt.preventDefault();
     closeModalPicture();
   }
@@ -83,8 +103,4 @@ const onEnterKeydown = (evt) => {
 
 const onCancelButtonClick = () => closeModalPicture();
 
-pictures.addEventListener('click', (evt) => {
-  const arrayIndex = evt.target.dataset.id - 1;
-
-  openModalPicture(photos[arrayIndex]);
-});
+export {openModalPicture};
