@@ -1,6 +1,8 @@
 import {isEscEvent} from './util.js';
 
 const LI_CLASS_NAME = 'social__comment';
+const IMG_CLASS_NAME = 'social__picture';
+const PAR_CLASS_NAME = 'social__text';
 const COMMENT_AVATAR_SIZE = 35;
 const COMMENTS_AMOUNT = 5;
 
@@ -21,28 +23,33 @@ const createComments = (comments) => {
   if (comments) {
     comments.forEach(comment => {
       const newLi = document.createElement('li');
+      const newImg = document.createElement('img');
+      const newPar = document.createElement('p');
 
       newLi.className = LI_CLASS_NAME;
-      newLi.innerHTML = `<img
-          class="social__picture"
-          src="${comment.avatar}"
-          alt="${comment.name}"
-          width="${COMMENT_AVATAR_SIZE}" height="${COMMENT_AVATAR_SIZE}">
-        <p class="social__text">${comment.message}</p>`;
+      newImg.className = IMG_CLASS_NAME;
+      newImg.src = comment.avatar;
+      newImg.alt = comment.name;
+      newImg.width = COMMENT_AVATAR_SIZE;
+      newImg.height = COMMENT_AVATAR_SIZE;
+      newPar.className = PAR_CLASS_NAME;
+      newPar.textContent = comment.message;
 
+      newLi.appendChild(newImg);
+      newLi.appendChild(newPar);
       socialComments.appendChild(newLi);
     });
   }
 
   if (comments.length >= COMMENTS_AMOUNT) {
     const commentsList = socialComments.querySelectorAll('.social__comment');
-    socialCommentCount.removeAttribute('hidden');
+    socialCommentCount.hidden = false;
     socialCommentCount.textContent = `${COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
 
     for (let i = 0; i < comments.length; i++) {
       if (i >= COMMENTS_AMOUNT) {
         commentsList[i].classList.add('hidden');
-        commentsLoader.removeAttribute('hidden');
+        commentsLoader.hidden = false;
       }
     }
   }
@@ -57,8 +64,8 @@ const openModalPicture = (photo) => {
   likesCount.textContent = photo.likes;
   commentsCount.textContent = photo.comments.length;
   socialCaption.textContent = photo.description;
-  socialCommentCount.setAttribute('hidden', '');
-  commentsLoader.setAttribute('hidden', '');
+  socialCommentCount.hidden = true;
+  commentsLoader.hidden = true;
 
   createComments(photo.comments);
 
@@ -83,7 +90,7 @@ const onСommentsLoaderClick = () => {
   socialCommentCount.textContent = `${commentsList.length - hiddenComments.length + COMMENTS_AMOUNT} из ${commentsList.length} комментариев`;
 
   if (hiddenComments.length <= COMMENTS_AMOUNT) {
-    commentsLoader.setAttribute('hidden', '');
+    commentsLoader.hidden = true;
     socialCommentCount.textContent = `${commentsList.length} из ${commentsList.length} комментариев`;
   }
 
