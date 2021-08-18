@@ -9,18 +9,10 @@ module.exports = {
     filename: 'main.bundle.js',
     path: path.resolve(__dirname, 'build/js'),
   },
-  watch: true,
   plugins: [
     new MiniCssExtractPlugin({
       filename: '../css/nouislider.css',
     }),
-
-    new BrowserSyncPlugin({
-      host: 'localhost',
-      port: 3000,
-      files: ['./build/js/*js'],
-      server: { baseDir: ['build'] }
-    })
   ],
   module: {
     rules: [
