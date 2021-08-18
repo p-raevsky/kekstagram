@@ -5,10 +5,10 @@
   "description": "Личный проект «Кекстаграм» от HTML Academy",
   "repository": {
     "type": "git",
-    "url": "git@github.com:htmlacademy-javascript/1573235-kekstagram-22.git"
+    "url": "git@github.com:p-raevsky/kekstagram.git"
   },
   "bugs": {
-    "url": "https://github.com/htmlacademy-javascript/1573235-kekstagram-22/issues"
+    "url": "https://github.com/p-raevsky/kekstagram/issues"
   },
   "devDependencies": {
     "browser-sync": "2.26.14",
